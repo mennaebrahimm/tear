@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Stripe Payment</title>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+
+  <h2>Test Stripe Payment</h2>
+
+  <form id="payment-form">
+    <div id="card-element"></div>
+    <button type="submit" id="submit">Pay</button>
+    <div id="error-message"></div>
+  </form>
+
+  <script>
+    // المفتاح العام من Stripe Dashboard
+    const stripe = Stripe("pk_test_51Rn0VvIgZmpOI8hZPRRXQoi4crYrFaqHhcQH5MmKnAYODSVREIAYj9FBGcxgTf1zqSOowZhEpEegFWKwC5ydkA3d00bZ6RXQKh");
+
+    const elements = stripe.elements();
+    const cardElement = elements.create('card');
+    cardElement.mount('#card-element');
+
+    const form = document.getElementById('payment-form');
+    const errorMessage = document.getElementById('error-message');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      // 🔐 ده الـ clientSecret اللي بتجيبيه من الـ API بتاعك
+      const clientSecret = "pi_3RoB9yIgZmpOI8hZ0NMr3ozj_secret_PBUMrIDZPUon5ekzP7Ng33XSL"; // ← غيريه بالقيمة الحقيقية اللي عندك
+
+      const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: 'Test User',
+            address: {
+              postal_code: '12345', // مطلوب أحيانًا
+            }
+          }
+        }
+      });
+
+      if (error) {
+        console.error(error);
+        errorMessage.textContent = error.message;
+      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+        alert("✅ Payment succeeded!");
+      }
+    });
+  </script>
+
+</body>
+</html>
