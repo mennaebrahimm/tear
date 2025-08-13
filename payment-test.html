@@ -15,7 +15,6 @@
   </form>
 
   <script>
-    // المفتاح العام من Stripe Dashboard
     const stripe = Stripe("pk_test_51Rn0VvIgZmpOI8hZPRRXQoi4crYrFaqHhcQH5MmKnAYODSVREIAYj9FBGcxgTf1zqSOowZhEpEegFWKwC5ydkA3d00bZ6RXQKh");
 
     const elements = stripe.elements();
@@ -28,8 +27,7 @@
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      // 🔐 ده الـ clientSecret اللي بتجيبيه من الـ API بتاعك
-      const clientSecret = "pi_3RoB9yIgZmpOI8hZ0NMr3ozj_secret_PBUMrIDZPUon5ekzP7Ng33XSL"; // ← غيريه بالقيمة الحقيقية اللي عندك
+      const clientSecret = ""; 
 
       const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
@@ -37,7 +35,7 @@
           billing_details: {
             name: 'Test User',
             address: {
-              postal_code: '12345', // مطلوب أحيانًا
+              postal_code: '12345',
             }
           }
         }
@@ -54,6 +52,7 @@
 
 </body>
 </html>
+
 
 
 
